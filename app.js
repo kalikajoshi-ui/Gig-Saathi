@@ -77,7 +77,7 @@ function renderEmpty(){if(currentIssue)return;$("resultPanel").innerHTML=`<div c
 function renderResult(type){currentIssue=type;const d=issueTranslations[language][type];$("resultPanel").innerHTML=`<div class="result-success"><span class="result-label">${t("guidanceFound")} · ${d.tag}</span><h2>${d.title}</h2><p class="result-summary">${d.summary}</p><h3>${t("whatDoNow")}</h3><ol class="guidance-steps">${d.steps.map(x=>`<li>${x}</li>`).join("")}</ol><div class="document-box"><strong>${t("keepReady")}</strong><ul>${d.docs.map(x=>`<li>${x}</li>`).join("")}</ul></div><div class="result-actions"><button id="listenResult" class="button button-primary" type="button">${t("listen")}</button><button id="copyResult" class="button button-secondary" type="button">${t("copy")}</button><button id="anotherResult" class="button button-text" type="button">${t("askAnother")}</button></div><p class="trust-meta"><strong>${t("source")}:</strong> ${t("knowledgeBase")} · <strong>${t("reviewed")}:</strong> 18 Sep 2026<br>${t("globalDisclaimer")}</p></div>`;$("listenResult").onclick=()=>speakIssue(d);$("copyResult").onclick=()=>copyGuidance(d);$("anotherResult").onclick=clearAssistant;}
 async function saveQuery(problem, category) {
     try {
-    const response = await fetch("http://localhost:5000/api/queries", {
+    const response = await fetch("https://gig-saathi-backend.onrender.com/api/queries", {
         method: "POST",
          headers: {
             "Content-Type": "application/json",
@@ -275,7 +275,7 @@ async function loadHistory() {
 
     try {
        const response = await fetch(
-        "http://localhost:5000/api/queries",
+        "https://gig-saathi-backend.onrender.com/api/queries",
         {
             headers: {
                 "Authorization": `Bearer ${userToken}`
