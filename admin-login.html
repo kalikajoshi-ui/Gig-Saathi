@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | Gig Saathi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 36px;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(23, 54, 93, 0.14);
+        }
+
+        .admin-label {
+            display: inline-block;
+            background: #eaf2fb;
+            color: #17365d;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            color: #17365d;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #5f6f82;
+            margin-bottom: 26px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            color: #202b38;
+            font-weight: bold;
+            margin: 16px 0 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d8e0e9;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #245f9f;
+            border-color: transparent;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #245f9f;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1b4e86;
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        #loginMessage {
+            min-height: 22px;
+            margin-top: 16px;
+            text-align: center;
+            color: #c0392b;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #245f9f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-card">
+        <span class="admin-label">Secure Admin Access</span>
+
+        <h1>Admin Login</h1>
+
+        <p class="subtitle">
+            Sign in to manage worker queries and view analytics.
+        </p>
+
+        <form id="adminLoginForm">
+            <label for="adminEmail">Admin Email</label>
+
+            <input
+                type="email"
+                id="adminEmail"
+                placeholder="Enter admin email"
+                required
+            >
+
+            <label for="adminPassword">Password</label>
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Enter password"
+                required
+            >
+
+            <button type="submit" id="loginButton">
+                Login to Dashboard
+            </button>
+
+            <p id="loginMessage"></p>
+        </form>
+
+        <a href="user-login.html" class="back-link">
+            Worker Login
+        </a>
+    </main>
+
+    <script>
+        const adminLoginForm =
+            document.getElementById("adminLoginForm");
+
+        const loginMessage =
+            document.getElementById("loginMessage");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        adminLoginForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const email =
+                document.getElementById("adminEmail").value.trim();
+
+            const password =
+                document.getElementById("adminPassword").value;
+
+            loginMessage.textContent = "";
+            loginButton.disabled = true;
+            loginButton.textContent = "Checking...";
+
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/auth/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message || "Login failed"
+                    );
+                }
+
+                if (data.user.role !== "admin") {
+                    throw new Error(
+                        "This account does not have admin access."
+                    );
+                }
+
+                sessionStorage.setItem(
+                    "gigSaathiAdminToken",
+                    data.token
+                );
+
+                sessionStorage.setItem(
+                    "gigSaathiAdmin",
+                    JSON.stringify(data.user)
+                );
+
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+                loginMessage.textContent = error.message;
+
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "Login to Dashboard";
+            }
+        });
+    </script>
+
+</body>
+</html>

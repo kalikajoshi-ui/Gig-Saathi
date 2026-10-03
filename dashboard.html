@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Dashboard | Gig Saathi</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #245f9f;
+            --primary-dark: #17365d;
+            --primary-light: #eaf2fb;
+            --orange: #6f96bf;
+            --background: #f5f7fa;
+            --white: #ffffff;
+            --text: #202b38;
+            --muted: #5f6f82;
+            --border: #d8e0e9;
+            --danger: #c0392b;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 7%;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--orange);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            font-weight: 600;
+            text-decoration: none;
+            padding: 9px 13px;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .container {
+            width: min(1160px, 92%);
+            margin: 32px auto;
+        }
+
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .heading h1 {
+            font-size: clamp(27px, 4vw, 40px);
+            margin-bottom: 8px;
+        }
+
+        .heading p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .refresh-button {
+            border: none;
+            border-radius: 9px;
+            padding: 11px 17px;
+            color: white;
+            background: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .refresh-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(23, 54, 93, 0.06);
+        }
+
+        .stat-card p {
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .stat-card h2 {
+            color: var(--primary);
+            font-size: 36px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(23, 54, 93, 0.05);
+        }
+
+        .panel h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .bar-item {
+            margin-bottom: 17px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .bar-track {
+            height: 10px;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #edf1ef;
+        }
+
+        .bar-fill {
+            height: 100%;
+            min-width: 4px;
+            border-radius: 20px;
+            background: linear-gradient(
+                90deg,
+                var(--primary),
+                #6f96bf
+            );
+        }
+
+        .language-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-light);
+            border-radius: 10px;
+            padding: 13px 15px;
+            font-weight: 700;
+        }
+
+        .language-count {
+            color: white;
+            background: var(--primary);
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--muted);
+            background: #fafcfb;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .problem-cell {
+            max-width: 330px;
+            line-height: 1.5;
+        }
+
+        .pill {
+            display: inline-block;
+            border-radius: 20px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .pill-category {
+            color: var(--primary-dark);
+            background: var(--primary-light);
+        }
+
+        .pill-open {
+            color: #9a5a00;
+            background: #fff0d9;
+        }
+
+        .pill-resolved {
+            color: #126344;
+            background: #dff5e9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 7px;
+        }
+
+        .action-button {
+            border: none;
+            border-radius: 7px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .status-button {
+            color: var(--primary-dark);
+            background: var(--primary-light);
+        }
+
+        .delete-button {
+            color: var(--danger);
+            background: #fde9e7;
+        }
+
+        .message {
+            color: var(--muted);
+            padding: 22px 0;
+            text-align: center;
+        }
+
+        .error-message {
+            color: var(--danger);
+            background: #fde9e7;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .stats-grid,
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .navbar {
+                align-items: flex-start;
+                gap: 14px;
+                flex-direction: column;
+            }
+
+            .nav-links {
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+        .admin-logout-button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #245f9f;
+            color: #ffffff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+.admin-logout-button:hover {
+    background: #1b4e86;
+}
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a class="brand" href="index.html">
+            Gig <span>Saathi</span>
+        </a>
+        <button
+            type="button"
+            class="admin-logout-button"
+            onclick="adminLogout()"
+        >
+            Logout
+        </button>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#library">Rights Library</a>
+            <a class="active" href="dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="heading">
+            <div>
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    MongoDB-powered query analytics and case management.
+                </p>
+            </div>
+
+            <button
+                class="refresh-button"
+                onclick="loadDashboard()"
+            >
+                Refresh Data
+            </button>
+        </section>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <p>Total Queries</p>
+                <h2 id="totalQueries">0</h2>
+            </article>
+
+            <article class="stat-card">
+                <p>Open Queries</p>
+                <h2 id="openQueries">0</h2>
+            </article>
+
+            <article class="stat-card">
+                <p>Resolved Queries</p>
+                <h2 id="resolvedQueries">0</h2>
+            </article>
+        </section>
+
+        <section class="analytics-grid">
+            <article class="panel">
+                <h2>Queries by Category</h2>
+
+                <div id="categoryStats">
+                    <p class="message">Loading categories...</p>
+                </div>
+            </article>
+
+            <article class="panel">
+                <h2>Language Usage</h2>
+
+                <div class="language-list" id="languageStats">
+                    <p class="message">Loading languages...</p>
+                </div>
+            </article>
+        </section>
+
+        <section class="panel">
+            <h2>Latest Submitted Queries</h2>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Problem</th>
+                            <th>Category</th>
+                            <th>Language</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="latestQueries">
+                        <tr>
+                            <td colspan="6" class="message">
+                                Loading queries...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.adminLogout = function () {
+            sessionStorage.removeItem("gigSaathiAdminToken");
+            sessionStorage.removeItem("gigSaathiAdmin");
+
+            window.location.href = "admin-login.html";
+        };
+        const adminToken =
+            sessionStorage.getItem("gigSaathiAdminToken");
+
+        const adminUser = JSON.parse(
+            sessionStorage.getItem("gigSaathiAdmin") || "null"
+        );
+
+        if (!adminToken || !adminUser || adminUser.role !== "admin") {
+            window.location.replace("admin-login.html");
+        }
+        const API_URL = "http://localhost:5000/api";
+
+        function escapeHTML(value) {
+            return String(value ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function formatName(value) {
+            const name = value || "unknown";
+
+            return name.charAt(0).toUpperCase() + name.slice(1);
+        }
+
+        async function loadDashboard() {
+            const errorMessage =
+                document.getElementById("errorMessage");
+
+            errorMessage.style.display = "none";
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/dashboard`,
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${adminToken}`
+                        }
+                    }
+                );
+
+                if (response.status === 401 || response.status === 403) {
+                    sessionStorage.removeItem("gigSaathiAdminToken");
+                    sessionStorage.removeItem("gigSaathiAdmin");
+
+                    window.location.replace("admin-login.html");
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message || "Dashboard could not load"
+                    );
+                }
+
+                displaySummary(data.summary);
+                displayCategories(data.categoryStats);
+                displayLanguages(data.languageStats);
+                displayLatestQueries(data.latestQueries);
+
+            } catch (error) {
+                errorMessage.textContent =
+                    "Dashboard could not connect to the backend. " +
+                    "Make sure node server.js is running.";
+
+                errorMessage.style.display = "block";
+
+                console.error(error);
+            }
+        }
+
+        function displaySummary(summary) {
+            document.getElementById("totalQueries").textContent =
+                summary.totalQueries || 0;
+
+            document.getElementById("openQueries").textContent =
+                summary.openQueries || 0;
+
+            document.getElementById("resolvedQueries").textContent =
+                summary.resolvedQueries || 0;
+        }
+
+        function displayCategories(categories) {
+            const container =
+                document.getElementById("categoryStats");
+
+            if (!categories.length) {
+                container.innerHTML =
+                    '<p class="message">No category data available.</p>';
+                return;
+            }
+
+            const maximumCount = Math.max(
+                ...categories.map(item => item.count)
+            );
+
+            container.innerHTML = categories.map(item => {
+                const width =
+                    (item.count / maximumCount) * 100;
+
+                return `
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span>
+                                ${escapeHTML(formatName(item._id))}
+                            </span>
+
+                            <span>${item.count}</span>
+                        </div>
+
+                        <div class="bar-track">
+                            <div
+                                class="bar-fill"
+                                style="width: ${width}%"
+                            ></div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function displayLanguages(languages) {
+            const container =
+                document.getElementById("languageStats");
+
+            if (!languages.length) {
+                container.innerHTML =
+                    '<p class="message">No language data available.</p>';
+                return;
+            }
+
+            container.innerHTML = languages.map(item => `
+                <div class="language-item">
+                    <span>
+                        ${escapeHTML(formatName(item._id))}
+                    </span>
+
+                    <span class="language-count">
+                        ${item.count}
+                    </span>
+                </div>
+            `).join("");
+        }
+
+        function displayLatestQueries(queries) {
+            const tableBody =
+                document.getElementById("latestQueries");
+
+            if (!queries.length) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="message">
+                            No queries submitted yet.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = queries.map(query => {
+                const status = query.status || "open";
+                const nextStatus =
+                    status === "open" ? "resolved" : "open";
+
+                return `
+                    <tr>
+                        <td class="problem-cell">
+                            ${escapeHTML(query.problem)}
+                        </td>
+
+                        <td>
+                            <span class="pill pill-category">
+                                ${escapeHTML(
+                                    formatName(query.category)
+                                )}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                formatName(query.language)
+                            )}
+                        </td>
+
+                        <td>
+                            <span class="pill pill-${status}">
+                                ${escapeHTML(status)}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${new Date(
+                                query.createdAt
+                            ).toLocaleString()}
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+                                <button
+                                    class="action-button status-button"
+                                    onclick="updateStatus(
+                                        '${query._id}',
+                                        '${nextStatus}'
+                                    )"
+                                >
+                                    Mark ${formatName(nextStatus)}
+                                </button>
+
+                                <button
+                                    class="action-button delete-button"
+                                    onclick="deleteQuery(
+                                        '${query._id}'
+                                    )"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        async function updateStatus(queryId, newStatus) {
+            try {
+                const response = await fetch(
+                    `${API_URL}/queries/${queryId}/status`,
+                    {
+                        method: "PATCH",
+
+                       headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${adminToken}`
+                        },
+
+                        body: JSON.stringify({
+                            status: newStatus
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message);
+                }
+
+                alert("Query status updated successfully!");
+                loadDashboard();
+
+            } catch (error) {
+                alert("Query status could not be updated.");
+                console.error(error);
+            }
+        }
+
+        async function deleteQuery(queryId) {
+            const confirmed = confirm(
+                "Are you sure you want to delete this query?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/queries/${queryId}`,
+                    {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${adminToken}`
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (response.status === 401 || response.status === 403) {
+                    sessionStorage.removeItem("gigSaathiAdminToken");
+                    sessionStorage.removeItem("gigSaathiAdmin");
+
+                    window.location.replace("admin-login.html");
+                    return;
+                }
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message || "Query could not be deleted."
+                    );
+                }
+
+                alert("Query deleted successfully!");
+                loadDashboard();
+
+            } catch (error) {
+                alert("Query could not be deleted.");
+                console.error(error);
+            }
+        }
+        loadDashboard();
+    </script>
+</body>
+</html>

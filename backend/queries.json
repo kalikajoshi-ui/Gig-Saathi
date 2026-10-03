@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1789752868673,
+    "problem": "My account was blocked without any reason or warning.",
+    "language": "en",
+    "category": "blocked",
+    "createdAt": "2026-09-18T17:34:28.673Z"
+  },
+  {
+    "id": 1789752872131,
+    "problem": "My account was blocked without any reason or warning.",
+    "language": "en",
+    "category": "blocked",
+    "createdAt": "2026-09-18T17:34:32.131Z"
+  },
+  {
+    "id": 1789754516575,
+    "problem": "My account was blocked without any reason",
+    "language": "en",
+    "category": "blocked",
+    "createdAt": "2026-09-18T18:01:56.575Z"
+  },
+  {
+    "id": 1789754775549,
+    "problem": "My incentive payment has not been credited",
+    "language": "en",
+    "category": "payment",
+    "createdAt": "2026-09-18T18:06:15.549Z"
+  },
+  {
+    "id": 1789754824885,
+    "problem": "I had an accident while completing a delivery",
+    "language": "en",
+    "category": "accident",
+    "createdAt": "2026-09-18T18:07:04.885Z"
+  },
+  {
+    "id": 1789754896127,
+    "problem": "I want to change my profile photo",
+    "language": "en",
+    "category": "unknown",
+    "createdAt": "2026-09-18T18:08:16.127Z"
+  },
+  {
+    "id": 1789755027267,
+    "problem": "my payment is missing",
+    "language": "en",
+    "category": "payment",
+    "createdAt": "2026-09-18T18:10:27.267Z"
+  }
+]

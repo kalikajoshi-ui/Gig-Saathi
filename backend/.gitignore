@@ -1,0 +1,9 @@
+node_modules/
+.env
+backend/node_modules/
+backend/.env
+venv/
+__pycache__/
+*.pyc
+tts_*.wav
+old frontend/
